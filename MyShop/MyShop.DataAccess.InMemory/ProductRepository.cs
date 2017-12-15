@@ -30,6 +30,7 @@ namespace MyShop.DataAccess.InMemory
         public void Insert(Product p)
         {
             products.Add(p);
+            Commit();
         }
 
         public Product Find(string Id)
@@ -51,6 +52,7 @@ namespace MyShop.DataAccess.InMemory
             if (productToUpdate != null)
             {
                 productToUpdate = product;
+                Commit();
             }
             else
             {
@@ -68,7 +70,8 @@ namespace MyShop.DataAccess.InMemory
             Product productToDelete = products.Find(c => c.Id == Id);
             if (productToDelete != null)
             {
-                products.Remove(productToDelete)
+                products.Remove(productToDelete);
+                Commit();
             }
             else
             {

@@ -16,6 +16,7 @@ namespace MyShop.Core.Models
         public string Name { get; set; }
         public string Description { get; set; }
         [Range(0,100)]
+        [DataType(DataType.Currency)]
         public decimal Range { get; set; }
         public string Category { get; set; }
         public string Image { get; set; }
