@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
+
 using System.Runtime.Caching;
 using MyShop.Core.Models;
+using MyShop.Core.Contracts;
 
 namespace MyShop.DataAccess.InMemory
 {
@@ -14,7 +17,8 @@ namespace MyShop.DataAccess.InMemory
     //Baes entitiy es una clase abstracta para que pueda ser heredada
     //La cual contiene las propiedades genericas que usan todas las clases
     //Tal como Id o FechaCrea
-    public class InMemoryRepository<T> where T : BaseEntity
+    //public class InMemoryRepository<T> where T : BaseEntity //-------------old
+    public class InMemoryRepository<T> : IRepository<T>  where T : BaseEntity
     {
         ObjectCache cache = MemoryCache.Default;
         List<T> items; //Creamos nuestra lista que almanecenara el objeto que se envie, ej: List<ProductCategory> productCategories;
@@ -39,6 +43,11 @@ namespace MyShop.DataAccess.InMemory
         public void Commit()
         {
             cache[className] = items;
+        }
+
+        public static void lkl()
+        {
+
         }
 
         public void Insert(T t)
