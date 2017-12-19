@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using MyShop.Core.Models;
+using MyShop.Core.ViewModels;
 using MyShop.DataAccess.InMemory;
 
 namespace MyShop.WebUI.Controllers
@@ -11,9 +12,13 @@ namespace MyShop.WebUI.Controllers
     public class ProductManagerController : Controller
     {
         ProductRepository context;
+        ProductCategoryRepository productCategories;
+
+
         public ProductManagerController()
         {
             context = new ProductRepository();
+            productCategories = new ProductCategoryRepository();
         }
         // GET: ProductManager
         public ActionResult Index()
@@ -24,28 +29,36 @@ namespace MyShop.WebUI.Controllers
 
         public ActionResult Create()
         {
-            Product product = new Product();
-            return View(product);
+            //Cargeremos nuestra nueva identidad
+            ProductManagerViewModel viewModel = new ProductManagerViewModel();
+
+            viewModel.Product = new Product(); //Cargamos nuestra entidad de producto a nuesta nueva identidad
+            viewModel.ProductCategories = productCategories.Collection(); //Buscamos todas las categorias que existen
+            return View(viewModel);
         }
 
         [HttpPost]
-        public ActionResult Create(Product p)
+        public ActionResult Create(Product product)
         {
             if (!ModelState.IsValid)
             {
-                return View(p);
+                return View(product);
             }
 
-            context.Insert(p);
+            context.Insert(product);
             return RedirectToAction("Index");
         }
+
 
         public ActionResult Edit(string Id)
         {
             Product productToEdit = context.Find(Id);
             if (productToEdit != null)
             {
-                return View(productToEdit);
+                ProductManagerViewModel viewModel = new ProductManagerViewModel();
+                viewModel.Product = productToEdit;
+                viewModel.ProductCategories = productCategories.Collection().ToList();
+                return View(viewModel);
             }
             else
             {
