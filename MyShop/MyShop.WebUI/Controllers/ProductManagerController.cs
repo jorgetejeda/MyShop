@@ -67,21 +67,21 @@ namespace MyShop.WebUI.Controllers
         }
 
         [HttpPost]
-        public ActionResult Edit(Product p)
+        public ActionResult Edit(Product product)
         {
-            Product productToEdit = context.Find(p.Id);
+            Product productToEdit = context.Find(product.Id);
             if (productToEdit != null)
             {
                 if (!ModelState.IsValid)
                 {
-                    return View(p);
+                    return View(product);
                 }
 
-                productToEdit.Name = p.Name;
-                productToEdit.Category = p.Category;
-                productToEdit.Description = p.Description;
-                productToEdit.Image = p.Image;
-                productToEdit.Range = p.Range;
+                productToEdit.Name = product.Name;
+                productToEdit.Category = product.Category;
+                productToEdit.Description = product.Description;
+                productToEdit.Image = product.Image;
+                productToEdit.Range = product.Range;
                 return RedirectToAction("Index");
             }
             else
