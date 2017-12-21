@@ -21,7 +21,6 @@ namespace MyShop.WebUI.Controllers
             context = new InMemoryRepository<Product>();
             productCategories = new InMemoryRepository<ProductCategory>();
 
-            InMemoryRepository<Product>.lkl();
         }
 
         // GET: ProductManager
