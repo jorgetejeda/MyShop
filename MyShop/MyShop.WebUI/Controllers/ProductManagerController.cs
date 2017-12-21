@@ -7,6 +7,7 @@ using MyShop.Core.Models;
 using MyShop.Core.ViewModels;
 using MyShop.DataAccess.InMemory;
 using MyShop.Core.Contracts;
+using System.IO;
 
 namespace MyShop.WebUI.Controllers
 {
@@ -40,16 +41,29 @@ namespace MyShop.WebUI.Controllers
             return View(viewModel);
         }
 
+        //agregamos la propiedad que nos permite recibir imagenes "HttpPostedFileBase" mas el name del campo en el formulario
         [HttpPost]
-        public ActionResult Create(Product product)
+        public ActionResult Create(Product product, HttpPostedFileBase file)
         {
             if (!ModelState.IsValid)
             {
                 return View(product);
             }
+            else
+            {
+                if (file != null)
+                {
+                    //Concatenamos el nombre de la imagen junto al Id
+                    product.Image = product.Id + Path.GetExtension(file.FileName);
+                    //GUardamos la imagen en nuestro archivo Content/ProductImages
+                    file.SaveAs(Server.MapPath("//Content//ProductImage//" + product.Image));
+                }
 
-            context.Insert(product);
-            return RedirectToAction("Index");
+                context.Insert(product);
+                return RedirectToAction("Index");
+            }
+
+
         }
 
 
@@ -70,9 +84,9 @@ namespace MyShop.WebUI.Controllers
         }
 
         [HttpPost]
-        public ActionResult Edit(Product product)
+        public ActionResult Edit(Product product, string Id, HttpPostedFileBase file)
         {
-            Product productToEdit = context.Find(product.Id);
+            Product productToEdit = context.Find(Id);
             if (productToEdit != null)
             {
                 if (!ModelState.IsValid)
@@ -80,10 +94,17 @@ namespace MyShop.WebUI.Controllers
                     return View(product);
                 }
 
+                if (file != null)
+                {
+                    //Concatenamos el nombre de la imagen junto al Id
+                    productToEdit.Image = product.Id + Path.GetExtension(file.FileName);
+                    //GUardamos la imagen en nuestro archivo Content/ProductImages
+                    file.SaveAs(Server.MapPath("//Content//ProductImage//" + productToEdit.Image));
+                }
+
                 productToEdit.Name = product.Name;
                 productToEdit.Category = product.Category;
                 productToEdit.Description = product.Description;
-                productToEdit.Image = product.Image;
                 productToEdit.Range = product.Range;
                 return RedirectToAction("Index");
             }
