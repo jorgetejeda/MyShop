@@ -1,13 +1,24 @@
-﻿@model IEnumerable<MyShop.Core.Models.Product>
+﻿@*@model IEnumerable<MyShop.Core.Models.Product>*@
+@model MyShop.Core.ViewModels.ProductListViewModel
 @{
     ViewBag.Title = "Home Page";
 }
 
 <div class="container">
     <div class="row" style="margin-top:20px;">
-        @foreach (var item in Model)
+        <div class="col-md-2">
+            <h4>Filter by Category</h4>
+            <div class="list-group">
+                @Html.ActionLink("All", "Index", null, new { @class = Request["Category"] == null ? "list-group-item active" : "list-group-item" })
+                @foreach (var category in Model.ProductCagetory)
+                {
+                    @Html.ActionLink(category.Category, "Index", new { Category = category.Category }, new { @class = Request["Category"] == category.Category ? "list-group-item active" : "list-group-item" })
+                }
+            </div>
+        </div>
+        @foreach (var item in Model.Product)
         {
-            <div class="col-md-4 text-center"1>
+            <div class="col-md-4 text-center" 1>
                 <div class="col-md-12">
                     <img src="~/Content/ProductImage/@item.Image" class="img-responsive" />
                 </div>
@@ -21,10 +32,10 @@
                     <p>@item.Range</p>
                 </div>
                 <div class="col-md-12">
-                    <a class="btn btn-default btn-block" href="#">Add to Basket</a> 
+                    <a class="btn btn-default btn-block" href="#">Add to Basket</a>
                 </div>
             </div>
-            
+
         }
         <div class="clearfix"></div>
     </div>

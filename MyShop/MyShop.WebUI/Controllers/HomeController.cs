@@ -22,10 +22,27 @@ namespace MyShop.WebUI.Controllers
             productCategory = new InMemoryRepository<ProductCategory>();
         }
 
-        public ActionResult Index()
+        public ActionResult Index(string Category = null)
         {
-            List<Product> listProduct = product.Collection().ToList();
-            return View(listProduct);
+            //Declaramos nuestra variable de productos ya que en ella guardaremos los productos que correspondan a esa categoria
+            List<Product> listProduct;
+            //Traemos todas las categorias que existen
+            List<ProductCategory> Categories = productCategory.Collection().ToList();
+            if (Category == null)
+            {
+                //Si la categoria esta vacia mandamos la lista completa
+                listProduct = product.Collection().ToList();
+            }
+            else
+            {
+                //Si la lista contiene algo entonces buscamos los productos que tengan esa categoria
+                listProduct = product.Collection().Where(c => c.Category == Category).ToList();
+            }
+            //Instanciamos nuestra clase el cual tiene nuestra lista de productos y categorias
+            ProductListViewModel model = new ProductListViewModel();
+            model.Product = listProduct;
+            model.ProductCagetory = Categories;
+            return View(model);
         }
 
         public ActionResult Details(string Id)
